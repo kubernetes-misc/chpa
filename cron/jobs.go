@@ -23,7 +23,7 @@ func AddJobIfNotExists(cs model.CronScaleV1) {
 		return
 	}
 
-	entryID, err := cron.New(cron.WithSeconds()).AddJob(cs.Spec.CronSpec, Job{
+	entryID, err := cron.New(cron.WithSeconds()).AddJob(cs.Spec.CronSpec, CronScaleJob{
 		cs: cs,
 	})
 	if err != nil {
@@ -31,4 +31,6 @@ func AddJobIfNotExists(cs model.CronScaleV1) {
 		return
 	}
 	Jobs[cs.GetID()] = entryID
+
+	//TODO: stop ones no longer existing
 }

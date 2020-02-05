@@ -20,19 +20,26 @@ func main() {
 		panic(err)
 	}
 	cronSpec := os.Getenv("cronSpec")
-	cronV3.New().AddJob(cronSpec, model.Job{
+	_, err = cronV3.New().AddJob(cronSpec, model.Job{
 		F: updateCronScales,
 	})
+	if err != nil {
+		panic(err)
+	}
+	select {}
 
 }
 
 func updateCronScales() {
+	//TODO: all namespace
 	c, err := client.GetAllCRD("default", model.CronScaleV1CRDSchema)
+	//TODO: return list
 	if err != nil {
 		logrus.Errorln(err)
 		return
 	}
 	for cs := range c {
+		//TODO: accept list, stop not existent ones and start others
 		cron.AddJobIfNotExists(cs)
 	}
 
