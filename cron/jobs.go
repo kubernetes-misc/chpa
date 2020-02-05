@@ -9,11 +9,11 @@ import (
 
 var Jobs = make(map[string]cron.EntryID)
 
-type Job struct {
+type CronScaleJob struct {
 	cs model.CronScaleV1
 }
 
-func (j Job) Run() {
+func (j CronScaleJob) Run() {
 	controller.ReconHub.Add(j.cs)
 }
 
