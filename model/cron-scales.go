@@ -13,6 +13,10 @@ type CronScaleV1 struct {
 	Spec     SpecV1     `json:"spec"`
 }
 
+func (cs CronScaleV1) GetID() string {
+	return "cronscalev1." + cs.Metadata.Namespace + "." + cs.Metadata.Name
+}
+
 type MetadataV1 struct {
 	Name      string `json:"name"`
 	Namespace string `json:"namespace"`
