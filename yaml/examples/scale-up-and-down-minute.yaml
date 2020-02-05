@@ -1,0 +1,27 @@
+apiVersion: "captainjustin.space/v1"
+kind: CronScale
+metadata:
+  name: scale-down-at-9pm
+spec:
+  cronSpec: "21 * * * *"
+  scaleTargetRef:
+    apiVersion: "extensions/v1beta1"
+    kind: "deployment"
+    name: "nginx"
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 60
+---
+apiVersion: "captainjustin.space/v1"
+kind: CronScale
+metadata:
+  name: scale-up-at-6am
+spec:
+  cronSpec: "6 * * * *"
+  scaleTargetRef:
+    apiVersion: "extensions/v1beta1"
+    kind: "deployment"
+    name: "nginx"
+  minReplicas: 4
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 40
