@@ -20,8 +20,8 @@ type MetadataV1 struct {
 
 type SpecV1 struct {
 	CronSpec                       string           `json:"cronSpec"`
-	MaxReplicas                    int              `json:"maxReplicas"`
-	MinReplicas                    int              `json:"minReplicas"`
+	MaxReplicas                    int32            `json:"maxReplicas"`
+	MinReplicas                    int32            `json:"minReplicas"`
 	TargetCPUUtilizationPercentage int              `json:"targetCPUUtilizationPercentage"`
 	ScaleTargetRef                 ScaleTargetRefV1 `json:"scaleTargetRef"`
 }

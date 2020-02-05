@@ -98,11 +98,7 @@ func GetDeployment(ns, name string) (deployment *v1.Deployment, err error) {
 	return
 }
 
-func UpdateDeployment(ns string, deployment *v1.Deployment) (err error) {
-	deployment, err = clientset.AppsV1().Deployments(ns).UpdateScale(deployment, &v1.Scale{})
-	if err != nil {
-		logrus.Errorln(err)
-		return
-	}
+func UpdateDeployment(deployment *v1.Deployment) (err error) {
+	_, err = clientset.AppsV1().Deployments(deployment.Namespace).Update(deployment)
 	return
 }

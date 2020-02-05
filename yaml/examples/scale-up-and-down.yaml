@@ -7,7 +7,7 @@ spec:
   scaleTargetRef:
     apiVersion: "extensions/v1beta1"
     kind: "deployment"
-    name: "nginx"
+    name: "worker"
   minReplicas: 2
   maxReplicas: 4
   targetCPUUtilizationPercentage: 60
@@ -21,7 +21,7 @@ spec:
   scaleTargetRef:
     apiVersion: "extensions/v1beta1"
     kind: "deployment"
-    name: "nginx"
+    name: "worker"
   minReplicas: 4
   maxReplicas: 8
   targetCPUUtilizationPercentage: 40

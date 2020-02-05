@@ -33,6 +33,18 @@ func main() {
 
 	for cs := range c {
 		fmt.Println(fmt.Sprintf("%s replicas: %v ==> %v @ CPU load of %v%% (cronscale/%s operating on %s/%s)", pad(cs.Spec.CronSpec, 12), cs.Spec.MinReplicas, cs.Spec.MaxReplicas, cs.Spec.TargetCPUUtilizationPercentage, cs.Metadata.Name, cs.Spec.ScaleTargetRef.Kind, cs.Spec.ScaleTargetRef.Name))
+		logrus.Println("Scaling...")
+		dep, err := client.GetDeployment(cs.Metadata.Namespace, cs.Spec.ScaleTargetRef.Name)
+		if err != nil {
+			logrus.Errorln(err)
+			continue
+		}
+		dep.Spec.Replicas = &cs.Spec.MinReplicas
+		client.UpdateDeployment(dep)
+		if true {
+			return
+		}
+
 	}
 
 	//deploymentsClient := clientset.AppsV1().Deployments(apiv1.NamespaceDefault)
