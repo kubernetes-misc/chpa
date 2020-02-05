@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/sirupsen/logrus"
 	v1 "k8s.io/api/apps/v1"
+	asv1 "k8s.io/api/autoscaling/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
@@ -100,5 +101,23 @@ func GetDeployment(ns, name string) (deployment *v1.Deployment, err error) {
 
 func UpdateDeployment(deployment *v1.Deployment) (err error) {
 	_, err = clientset.AppsV1().Deployments(deployment.Namespace).Update(deployment)
+	return
+}
+
+func GetHPA(ns, name string) (hpa *asv1.HorizontalPodAutoscaler, err error) {
+	hpa, err = clientset.AutoscalingV1().HorizontalPodAutoscalers(ns).Get(name, metav1.GetOptions{})
+	if err != nil {
+		logrus.Errorln(err)
+		return
+	}
+	return
+}
+
+func UpdateHPA(ns string, hpa *asv1.HorizontalPodAutoscaler) (err error) {
+	_, err = clientset.AutoscalingV1().HorizontalPodAutoscalers(ns).Update(hpa)
+	if err != nil {
+		logrus.Errorln(err)
+		return
+	}
 	return
 }

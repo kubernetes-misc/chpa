@@ -8,9 +8,11 @@ spec:
     apiVersion: "extensions/v1beta1"
     kind: "deployment"
     name: "worker"
-  minReplicas: 2
-  maxReplicas: 4
-  targetCPUUtilizationPercentage: 60
+  HorizontalPodAutoScaler:
+    name: "worker"
+    minReplicas: 2
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 60
 ---
 apiVersion: "captainjustin.space/v1"
 kind: CronScale
@@ -22,6 +24,8 @@ spec:
     apiVersion: "extensions/v1beta1"
     kind: "deployment"
     name: "worker"
-  minReplicas: 4
-  maxReplicas: 8
-  targetCPUUtilizationPercentage: 40
+  HorizontalPodAutoScaler:
+    name: "worker"
+    minReplicas: 4
+    maxReplicas: 8
+    targetCPUUtilizationPercentage: 40

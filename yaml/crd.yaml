@@ -25,7 +25,7 @@ spec:
     # shortNames allow shorter string to match your resource on the CLI
     shortNames:
       - cs
-#  preserveUnknownFields: false
+  #  preserveUnknownFields: false
   validation:
     openAPIV3Schema:
       type: object
@@ -44,9 +44,14 @@ spec:
                   type: string
                 name:
                   type: string
-            minReplicas:
-              type: integer
-            maxReplicas:
-              type: integer
-            targetCPUUtilizationPercentage:
-              type: integer
+            horizontalPodAutoScaler:
+              type: object
+              properties:
+                name:
+                  type: string
+                minReplicas:
+                  type: integer
+                maxReplicas:
+                  type: integer
+                targetCPUUtilizationPercentage:
+                  type: integer

@@ -19,15 +19,20 @@ type MetadataV1 struct {
 }
 
 type SpecV1 struct {
-	CronSpec                       string           `json:"cronSpec"`
-	MaxReplicas                    int32            `json:"maxReplicas"`
-	MinReplicas                    int32            `json:"minReplicas"`
-	TargetCPUUtilizationPercentage int              `json:"targetCPUUtilizationPercentage"`
-	ScaleTargetRef                 ScaleTargetRefV1 `json:"scaleTargetRef"`
+	CronSpec                string                  `json:"cronSpec"`
+	ScaleTargetRef          ScaleTargetRefV1        `json:"scaleTargetRef"`
+	HorizontalPodAutoScaler HorizontalPodAutoScaler `json:"horizontalPodAutoScaler"`
 }
 
 type ScaleTargetRefV1 struct {
 	ApiVersion string `json:"apiVersion"`
 	Kind       string `json:"kind"`
 	Name       string `json:"name"`
+}
+
+type HorizontalPodAutoScaler struct {
+	Name                           string `json:"name"`
+	MaxReplicas                    int32  `json:"maxReplicas"`
+	MinReplicas                    int32  `json:"minReplicas"`
+	TargetCPUUtilizationPercentage int32  `json:"targetCPUUtilizationPercentage"`
 }
