@@ -9,3 +9,4 @@ Trigger different Horizontal Pod Autoscaling strategies by cron
 - Consider approaching as an Operator
 - Consider pointing to the official HPA API client struct
 - Consider different concurrency model for increased reliability in various failure cases 
+- More convention around how to handle .kube/conf as file using in-cluster authentication
