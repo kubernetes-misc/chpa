@@ -1,6 +1,9 @@
 package model
 
-import "k8s.io/apimachinery/pkg/runtime/schema"
+import (
+	"fmt"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+)
 
 var CronScaleV1CRDSchema = schema.GroupVersionResource{
 	Group:    "captainjustin.space",
@@ -11,6 +14,11 @@ var CronScaleV1CRDSchema = schema.GroupVersionResource{
 type CronScaleV1 struct {
 	Metadata MetadataV1 `json:"metadata"`
 	Spec     SpecV1     `json:"spec"`
+}
+
+func (cs CronScaleV1) PrettyString() string {
+	return fmt.Sprintf("%s replicas: %v ==> %v @ CPU load of %v%% (cronscale/%s operating on %s/%s)", pad(cs.Spec.CronSpec, 12), cs.Spec.HorizontalPodAutoScaler.MinReplicas, cs.Spec.HorizontalPodAutoScaler.MaxReplicas, cs.Spec.HorizontalPodAutoScaler.TargetCPUUtilizationPercentage, cs.Metadata.Name, cs.Spec.ScaleTargetRef.Kind, cs.Spec.ScaleTargetRef.Name)
+
 }
 
 func (cs CronScaleV1) GetID() string {
@@ -39,4 +47,12 @@ type HorizontalPodAutoScaler struct {
 	MaxReplicas                    int32  `json:"maxReplicas"`
 	MinReplicas                    int32  `json:"minReplicas"`
 	TargetCPUUtilizationPercentage int32  `json:"targetCPUUtilizationPercentage"`
+}
+
+func pad(in string, size int) string {
+	result := in
+	for len(result) < size {
+		result += " "
+	}
+	return result
 }

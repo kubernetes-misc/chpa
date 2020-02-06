@@ -17,6 +17,7 @@ import (
 const DefaultCronSpec = "*/5 * * * * *"
 
 func main() {
+	logrus.Println("Starting up...")
 	err := client.BuildClient()
 	if err != nil {
 		panic(err)
@@ -35,13 +36,14 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	//logrus.SetLevel(logrus.InfoLevel)
 	select {}
 
 }
 
 func updateCronScales() {
 
-	logrus.Println("> Getting all namespaces")
+	logrus.Debugln("> Getting all namespaces")
 	nsl, err := client.GetAllNS()
 	if err != nil {
 		logrus.Errorln(err)
@@ -50,7 +52,7 @@ func updateCronScales() {
 
 	allCRDS := make([]model.CronScaleV1, 0)
 	for _, ns := range nsl {
-		logrus.Println(">> Getting CRDs in", ns)
+		logrus.Debugln(">> Getting CRDs in", ns)
 		crds, err := client.GetAllCRD(ns, model.CronScaleV1CRDSchema)
 		if err != nil {
 			logrus.Errorln(err)

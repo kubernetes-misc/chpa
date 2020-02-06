@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/sirupsen/logrus"
 	"k8s.io/mouse/client"
 	"k8s.io/mouse/model"
@@ -13,6 +12,7 @@ func NewReconHub() *reconHub {
 	r := &reconHub{in: make(chan model.CronScaleV1, 256)}
 	go func() {
 		for cs := range r.in {
+			logrus.Debugln("recon hub has received", cs.GetID(), "event")
 			checkAndUpdate(cs)
 		}
 	}()
@@ -28,7 +28,6 @@ func (r *reconHub) Add(cs model.CronScaleV1) {
 }
 
 func checkAndUpdate(cs model.CronScaleV1) {
-	logrus.Println(fmt.Sprintf("%s replicas: %v ==> %v @ CPU load of %v%% (cronscale/%s operating on %s/%s)", pad(cs.Spec.CronSpec, 12), cs.Spec.HorizontalPodAutoScaler.MinReplicas, cs.Spec.HorizontalPodAutoScaler.MaxReplicas, cs.Spec.HorizontalPodAutoScaler.TargetCPUUtilizationPercentage, cs.Metadata.Name, cs.Spec.ScaleTargetRef.Kind, cs.Spec.ScaleTargetRef.Name))
 
 	checkAndUpdateDeployment(cs)
 	checkAndUpdateHPA(cs)
@@ -61,12 +60,4 @@ func checkAndUpdateDeployment(cs model.CronScaleV1) {
 	dep.Spec.Replicas = &cs.Spec.HorizontalPodAutoScaler.MinReplicas
 	client.UpdateDeployment(dep)
 
-}
-
-func pad(in string, size int) string {
-	result := in
-	for len(result) < size {
-		result += " "
-	}
-	return result
 }

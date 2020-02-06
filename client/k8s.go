@@ -49,7 +49,7 @@ func BuildClient() (err error) {
 }
 
 func GetAllNS() ([]string, error) {
-	logrus.Println("== getting namespaces ==")
+	logrus.Debugln("== getting namespaces ==")
 	ls, err := clientset.CoreV1().Namespaces().List(metav1.ListOptions{})
 	if err != nil {
 		logrus.Errorln(err)
@@ -63,7 +63,7 @@ func GetAllNS() ([]string, error) {
 }
 
 func GetAllCRD(namespace string, crd schema.GroupVersionResource) (result []model.CronScaleV1, err error) {
-	logrus.Println("== getting CRDs ==")
+	logrus.Debugln("== getting CRDs ==")
 	crdClient := dynClient.Resource(crd)
 	ls, err := crdClient.Namespace(namespace).List(metav1.ListOptions{})
 	if err != nil {
@@ -90,7 +90,7 @@ func GetAllCRD(namespace string, crd schema.GroupVersionResource) (result []mode
 }
 
 func GetDeployment(ns, name string) (deployment *v1.Deployment, err error) {
-	logrus.Println("== getting deployment ==")
+	logrus.Debugln("== getting deployment ==")
 	deployment, err = clientset.AppsV1().Deployments(ns).Get(name, metav1.GetOptions{})
 	if err != nil {
 		logrus.Errorln(err)
@@ -100,13 +100,13 @@ func GetDeployment(ns, name string) (deployment *v1.Deployment, err error) {
 }
 
 func UpdateDeployment(deployment *v1.Deployment) (err error) {
-	logrus.Println("== update deployment ==")
+	logrus.Debugln("== update deployment ==")
 	_, err = clientset.AppsV1().Deployments(deployment.Namespace).Update(deployment)
 	return
 }
 
 func GetHPA(ns, name string) (hpa *asv1.HorizontalPodAutoscaler, err error) {
-	logrus.Println("== getting HPA ==")
+	logrus.Debugln("== getting HPA ==")
 	hpa, err = clientset.AutoscalingV1().HorizontalPodAutoscalers(ns).Get(name, metav1.GetOptions{})
 	if err != nil {
 		logrus.Errorln(err)
@@ -116,7 +116,7 @@ func GetHPA(ns, name string) (hpa *asv1.HorizontalPodAutoscaler, err error) {
 }
 
 func UpdateHPA(ns string, hpa *asv1.HorizontalPodAutoscaler) (err error) {
-	logrus.Println("== updating HPA ==")
+	logrus.Debugln("== updating HPA ==")
 	_, err = clientset.AutoscalingV1().HorizontalPodAutoscalers(ns).Update(hpa)
 	if err != nil {
 		logrus.Errorln(err)
