@@ -52,6 +52,7 @@ func MatchJobs(all []model.CronScaleV1) {
 		if found {
 			logrus.Debugln("...", cs.GetID(), "updating as already exists")
 			foundCS.UpdateCronScale(cs)
+			//TODO: update the cronSpec in the cron c
 			continue
 		}
 		logrus.Debugln("...", cs.GetID(), "should be created")

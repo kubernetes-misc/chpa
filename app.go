@@ -16,6 +16,8 @@ import (
 
 const DefaultCronSpec = "*/5 * * * * *"
 
+//TODO: panic as feedback
+
 func main() {
 	logrus.Println("Starting up...")
 	err := client.BuildClient()
