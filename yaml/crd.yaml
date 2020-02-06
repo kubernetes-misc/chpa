@@ -47,7 +47,7 @@ spec:
             horizontalPodAutoScaler:
               type: object
               properties:
-                name:
+                name: # Consider using selectors instead - Kevin
                   type: string
                 minReplicas:
                   type: integer
