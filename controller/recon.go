@@ -12,8 +12,7 @@ var ReconHub = NewReconHub()
 func NewReconHub() *reconHub {
 	r := &reconHub{in: make(chan model.CronScaleV1, 256)}
 	go func() {
-		for {
-			cs := <-r.in
+		for cs := range r.in {
 			checkAndUpdate(cs)
 		}
 	}()

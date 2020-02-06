@@ -6,16 +6,25 @@ import (
 	"github.com/sirupsen/logrus"
 	"k8s.io/mouse/controller"
 	"k8s.io/mouse/model"
+	"sync"
 )
 
-var Jobs = make(map[string]*cron.Cron)
+var Jobs = make(map[string]*Job)
 
-type CronScaleJob struct {
-	cs model.CronScaleV1
+type Job struct {
+	sync.Mutex
+	CronScale model.CronScaleV1
+	Cron      *cron.Cron
 }
 
-func (j CronScaleJob) Run() {
-	controller.ReconHub.Add(j.cs)
+func (j Job) Run() {
+	controller.ReconHub.Add(j.CronScale)
+}
+
+func (j *Job) UpdateCronScale(cs model.CronScaleV1) {
+	j.Lock()
+	j.CronScale = cs
+	j.Unlock()
 }
 
 func MatchJobs(all []model.CronScaleV1) {
@@ -33,29 +42,32 @@ func MatchJobs(all []model.CronScaleV1) {
 	//Remove invalid jobs
 	for _, tr := range toRemove {
 		logrus.Println(fmt.Sprintf("> Removed job %s", tr))
-		Jobs[tr].Stop()
+		Jobs[tr].Cron.Stop()
 		delete(Jobs, tr)
 	}
 
 	//Create if not exists
 	for _, cs := range all {
-		_, found := Jobs[cs.GetID()]
+		foundCS, found := Jobs[cs.GetID()]
 		if found {
-			logrus.Println("...", cs.GetID(), "not creating as it already exists")
+			logrus.Println("...", cs.GetID(), "updating as already exists")
+			foundCS.UpdateCronScale(cs)
 			continue
 		}
 		logrus.Println("...", cs.GetID(), "does not exist yet")
 		c := cron.New()
-		_, err := c.AddJob(cs.Spec.CronSpec, CronScaleJob{
-			cs: cs,
-		})
+		j := &Job{
+			CronScale: cs,
+			Cron:      c,
+		}
+		_, err := c.AddJob(cs.Spec.CronSpec, j)
 		c.Start()
 		if err != nil {
 			logrus.Errorln(err)
 			continue
 		}
 		logrus.Println(fmt.Sprintf("> Creating job %s", cs.GetID()))
-		Jobs[cs.GetID()] = c
+		Jobs[cs.GetID()] = j
 	}
 
 }
