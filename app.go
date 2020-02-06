@@ -14,13 +14,19 @@ import (
 	// Or uncomment to load specific auth plugins
 )
 
+const DefaultCronSpec = "*/5 * * * * *"
+
 func main() {
 	err := client.BuildClient()
 	if err != nil {
 		panic(err)
 	}
 	cronSpec := os.Getenv("cronSpec")
-	c := cronV3.New()
+	if cronSpec == "" {
+		logrus.Println("cronSpec env is empty. Defaulting to", DefaultCronSpec)
+		cronSpec = DefaultCronSpec
+	}
+	c := cronV3.New(cronV3.WithSeconds())
 	_, err = c.AddJob(cronSpec, model.Job{
 		F: updateCronScales,
 	})
@@ -35,7 +41,7 @@ func main() {
 
 func updateCronScales() {
 
-	logrus.Println("> Getting all namepaces")
+	logrus.Println("> Getting all namespaces")
 	nsl, err := client.GetAllNS()
 	if err != nil {
 		logrus.Errorln(err)
