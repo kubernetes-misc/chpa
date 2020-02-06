@@ -49,19 +49,21 @@ func BuildClient() (err error) {
 }
 
 func GetAllNS() ([]string, error) {
+	logrus.Println("== getting namespaces ==")
 	ls, err := clientset.CoreV1().Namespaces().List(metav1.ListOptions{})
 	if err != nil {
 		logrus.Errorln(err)
 		return nil, err
 	}
 	result := make([]string, len(ls.Items))
-	for _, n := range ls.Items {
-		result = append(result, n.Name)
+	for i, n := range ls.Items {
+		result[i] = n.Name
 	}
 	return result, nil
 }
 
-func GetAllCRD(namespace string, crd schema.GroupVersionResource) (result chan model.CronScaleV1, err error) {
+func GetAllCRD(namespace string, crd schema.GroupVersionResource) (result []model.CronScaleV1, err error) {
+	logrus.Println("== getting CRDs ==")
 	crdClient := dynClient.Resource(crd)
 	ls, err := crdClient.Namespace(namespace).List(metav1.ListOptions{})
 	if err != nil {
@@ -69,28 +71,26 @@ func GetAllCRD(namespace string, crd schema.GroupVersionResource) (result chan m
 		return
 	}
 
-	result = make(chan model.CronScaleV1)
-	go func() {
-		for _, entry := range ls.Items {
-			b, err := entry.MarshalJSON()
-			if err != nil {
-				logrus.Errorln(err)
-				continue
-			}
-			cs := model.CronScaleV1{}
-			err = json.Unmarshal(b, &cs)
-			if err != nil {
-				logrus.Errorln(err)
-			}
-			result <- cs
-			//fmt.Println(fmt.Sprintf("%s replicas: %v ==> %v @ CPU load of %v%% (cronscale/%s operating on %s/%s)", pad(cs.Spec.CronSpec, 12), cs.Spec.MinReplicas, cs.Spec.MaxReplicas, cs.Spec.TargetCPUUtilizationPercentage, cs.Metadata.Name, cs.Spec.ScaleTargetRef.Kind, cs.Spec.ScaleTargetRef.Name))
+	result = make([]model.CronScaleV1, len(ls.Items))
+	for i, entry := range ls.Items {
+		b, err := entry.MarshalJSON()
+		if err != nil {
+			logrus.Errorln(err)
+			continue
 		}
-		close(result)
-	}()
+		cs := model.CronScaleV1{}
+		err = json.Unmarshal(b, &cs)
+		if err != nil {
+			logrus.Errorln(err)
+		}
+		result[i] = cs
+		//fmt.Println(fmt.Sprintf("%s replicas: %v ==> %v @ CPU load of %v%% (cronscale/%s operating on %s/%s)", pad(cs.Spec.CronSpec, 12), cs.Spec.MinReplicas, cs.Spec.MaxReplicas, cs.Spec.TargetCPUUtilizationPercentage, cs.Metadata.Name, cs.Spec.ScaleTargetRef.Kind, cs.Spec.ScaleTargetRef.Name))
+	}
 	return
 }
 
 func GetDeployment(ns, name string) (deployment *v1.Deployment, err error) {
+	logrus.Println("== getting deployment ==")
 	deployment, err = clientset.AppsV1().Deployments(ns).Get(name, metav1.GetOptions{})
 	if err != nil {
 		logrus.Errorln(err)
@@ -100,11 +100,13 @@ func GetDeployment(ns, name string) (deployment *v1.Deployment, err error) {
 }
 
 func UpdateDeployment(deployment *v1.Deployment) (err error) {
+	logrus.Println("== update deployment ==")
 	_, err = clientset.AppsV1().Deployments(deployment.Namespace).Update(deployment)
 	return
 }
 
 func GetHPA(ns, name string) (hpa *asv1.HorizontalPodAutoscaler, err error) {
+	logrus.Println("== getting HPA ==")
 	hpa, err = clientset.AutoscalingV1().HorizontalPodAutoscalers(ns).Get(name, metav1.GetOptions{})
 	if err != nil {
 		logrus.Errorln(err)
@@ -114,6 +116,7 @@ func GetHPA(ns, name string) (hpa *asv1.HorizontalPodAutoscaler, err error) {
 }
 
 func UpdateHPA(ns string, hpa *asv1.HorizontalPodAutoscaler) (err error) {
+	logrus.Println("== updating HPA ==")
 	_, err = clientset.AutoscalingV1().HorizontalPodAutoscalers(ns).Update(hpa)
 	if err != nil {
 		logrus.Errorln(err)

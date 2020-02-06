@@ -20,9 +20,12 @@ func main() {
 		panic(err)
 	}
 	cronSpec := os.Getenv("cronSpec")
-	_, err = cronV3.New().AddJob(cronSpec, model.Job{
+	c := cronV3.New()
+	_, err = c.AddJob(cronSpec, model.Job{
 		F: updateCronScales,
 	})
+	c.Start()
+	updateCronScales()
 	if err != nil {
 		panic(err)
 	}
@@ -31,16 +34,24 @@ func main() {
 }
 
 func updateCronScales() {
-	//TODO: all namespace
-	c, err := client.GetAllCRD("default", model.CronScaleV1CRDSchema)
-	//TODO: return list
+
+	logrus.Println("> Getting all namepaces")
+	nsl, err := client.GetAllNS()
 	if err != nil {
 		logrus.Errorln(err)
 		return
 	}
-	for cs := range c {
-		//TODO: accept list, stop not existent ones and start others
-		cron.AddJobIfNotExists(cs)
+
+	allCRDS := make([]model.CronScaleV1, 0)
+	for _, ns := range nsl {
+		logrus.Println(">> Getting CRDs in", ns)
+		crds, err := client.GetAllCRD(ns, model.CronScaleV1CRDSchema)
+		if err != nil {
+			logrus.Errorln(err)
+			return
+		}
+		allCRDS = append(allCRDS, crds...)
 	}
+	cron.MatchJobs(allCRDS)
 
 }
