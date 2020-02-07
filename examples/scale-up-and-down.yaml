@@ -3,7 +3,7 @@ kind: CronHPA
 metadata:
   name: scale-down
 spec:
-  cronSpec: "*/4 * * * *"
+  cronSpecSeconds: "30 * * * * *"
   scaleTargetRef:
     apiVersion: "extensions/v1beta1"
     kind: "deployment"
@@ -19,7 +19,7 @@ kind: CronHPA
 metadata:
   name: scale-up
 spec:
-  cronSpec: "*/3 * * * *"
+  cronSpecSeconds: "0 * * * * *"
   scaleTargetRef:
     apiVersion: "extensions/v1beta1"
     kind: "deployment"

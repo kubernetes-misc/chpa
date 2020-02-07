@@ -36,6 +36,8 @@ spec:
           properties:
             cronSpec:
               type: string
+            cronSpecSeconds:
+              type: string
             scaleTargetRef:
               type: object
               properties:

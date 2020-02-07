@@ -32,7 +32,8 @@ func MatchJobs(all []model.CronHPAV1) {
 	//Find invalid jobs
 	toRemove := make([]string, 0)
 	for csID, _ := range Jobs {
-		if exists, cs := IDExists(csID, all); !exists || cs.Spec.CronSpec != Jobs[csID].CronScale.Spec.CronSpec {
+
+		if exists, cs := IDExists(csID, all); !exists || !cs.Spec.CronSpecEquals(Jobs[csID].CronScale.Spec) {
 			logrus.Infoln("... should remove", csID, "for update:", exists)
 			toRemove = append(toRemove, csID)
 			continue
@@ -56,12 +57,18 @@ func MatchJobs(all []model.CronHPAV1) {
 			continue
 		}
 		logrus.Infoln("...", cs.GetID(), "should be created")
-		c := cron.New()
+		cronSpec, seconds := cs.Spec.GetCronSpec()
+		var c *cron.Cron
+		if seconds {
+			c = cron.New(cron.WithSeconds())
+		} else {
+			c = cron.New()
+		}
 		j := &Job{
 			CronScale: cs,
 			Cron:      c,
 		}
-		_, err := c.AddJob(cs.Spec.CronSpec, j)
+		_, err := c.AddJob(cronSpec, j)
 		c.Start()
 		if err != nil {
 			logrus.Errorln(err)

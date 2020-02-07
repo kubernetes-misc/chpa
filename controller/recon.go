@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/sirupsen/logrus"
 	"k8s.io/mouse/client"
 	"k8s.io/mouse/model"
@@ -45,6 +46,7 @@ func checkAndUpdateHPA(cs model.CronHPAV1) {
 	hpa.Spec.MaxReplicas = cs.Spec.HorizontalPodAutoScaler.MaxReplicas
 	hpa.Spec.TargetCPUUtilizationPercentage = &cs.Spec.HorizontalPodAutoScaler.TargetCPUUtilizationPercentage
 	client.UpdateHPA(cs.Metadata.Namespace, hpa)
+	logrus.Infoln(fmt.Sprintf(">> Updating hpa/%s from %v to %v @ CPU load of %v%%", cs.Spec.HorizontalPodAutoScaler.Name, cs.Spec.HorizontalPodAutoScaler.MinReplicas, cs.Spec.HorizontalPodAutoScaler.MaxReplicas, cs.Spec.HorizontalPodAutoScaler.TargetCPUUtilizationPercentage))
 
 }
 
@@ -57,5 +59,6 @@ func checkAndUpdateDeployment(cs model.CronHPAV1) {
 	}
 	dep.Spec.Replicas = &cs.Spec.HorizontalPodAutoScaler.MinReplicas
 	client.UpdateDeployment(dep)
+	logrus.Infoln(fmt.Sprintf(">> Updating deployment/%s to min replicas %v", cs.Spec.HorizontalPodAutoScaler.Name, cs.Spec.HorizontalPodAutoScaler.MinReplicas))
 
 }
