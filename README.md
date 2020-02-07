@@ -1,6 +1,4 @@
-# kubernetes-misc
-
-## CHPA
+# CHPA
 
 Declarative Cron-based Horizontal Pod Autoscaler for Kubernetes 
 
