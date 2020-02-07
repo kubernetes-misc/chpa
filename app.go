@@ -38,7 +38,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	//logrus.SetLevel(logrus.InfoLevel)
+	logrus.SetLevel(logrus.InfoLevel)
 	select {}
 
 }
