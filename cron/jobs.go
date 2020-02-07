@@ -2,10 +2,10 @@ package cron
 
 import (
 	"fmt"
+	"github.com/kubernetes-misc/chpa/controller"
+	"github.com/kubernetes-misc/chpa/model"
 	cron "github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
-	"k8s.io/mouse/controller"
-	"k8s.io/mouse/model"
 	"sync"
 )
 

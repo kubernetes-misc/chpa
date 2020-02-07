@@ -1,11 +1,11 @@
 package main
 
 import (
+	"github.com/kubernetes-misc/chpa/client"
+	"github.com/kubernetes-misc/chpa/cron"
+	"github.com/kubernetes-misc/chpa/model"
 	cronV3 "github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
-	"k8s.io/mouse/client"
-	"k8s.io/mouse/cron"
-	"k8s.io/mouse/model"
 	"os"
 	//
 	// Uncomment to load all auth plugins

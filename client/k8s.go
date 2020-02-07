@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/kubernetes-misc/chpa/model"
 	"github.com/sirupsen/logrus"
 	v1 "k8s.io/api/apps/v1"
 	asv1 "k8s.io/api/autoscaling/v1"
@@ -13,7 +14,6 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
-	"k8s.io/mouse/model"
 	"path/filepath"
 )
 

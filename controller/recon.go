@@ -2,9 +2,9 @@ package controller
 
 import (
 	"fmt"
+	"github.com/kubernetes-misc/chpa/client"
+	"github.com/kubernetes-misc/chpa/model"
 	"github.com/sirupsen/logrus"
-	"k8s.io/mouse/client"
-	"k8s.io/mouse/model"
 )
 
 var ReconHub = NewReconHub()

@@ -1,6 +1,6 @@
 // This is a generated file. Do not edit directly.
 
-module k8s.io/mouse
+module github.com/kubernetes-misc/chpa
 
 go 1.13
 
