@@ -15,15 +15,15 @@ Declarative Cron-based Horizontal Pod Autoscaler for Kubernetes
 ## Roadmap
 
 ### Version 1
-- Docs
+- Docs (running, deployment and production)
 - Yaml for Kubernetes deployment
 - HA: interim strategy involving redundant imperative approach
 - HA: Integration with etcd to allow for HA deployment and locking when carrying out jobs
+- Investigate different concurrency model for increased reliability in various failure cases 
 
 ### Version 2
 - More options around how to kube conf - using in-cluster authentication, RBAC instead
 - Investigate using selectors to pick HPAs - Kevin
-- Investigate pointing to the official HPA API client struct
-- Investigate different concurrency model for increased reliability in various failure cases 
 - Investigate approaching as an Operator
+- Investigate pointing to the official HPA API client struct
 - Exclude namespaces
