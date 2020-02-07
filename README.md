@@ -1,5 +1,7 @@
 # CHPA
 
+<img src="https://goreportcard.com/badge/github.com/kubernetes-misc/chpa">&nbsp;
+
 Declarative Cron-based Horizontal Pod Autoscaler for Kubernetes 
 
 ## Features
