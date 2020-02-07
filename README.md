@@ -11,3 +11,4 @@ Trigger different Horizontal Pod Autoscaling strategies by cron
 - Consider different concurrency model for increased reliability in various failure cases 
 - More convention around how to handle .kube/conf as file using in-cluster authentication
 - Consider using selectors instead - Kevin
+- Support for cron with seconds and without
