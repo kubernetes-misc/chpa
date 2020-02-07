@@ -1,14 +1,17 @@
-# kubernetes-cronscale
+# kubernetes-misc
+
+## Cron-based Horizontal Pod Autoscaler
+
 Trigger different Horizontal Pod Autoscaling strategies by cron 
 
-## To do
-- Pick a name for the project
-- Pick a home for the project?
-- Change the crd spec.group to new project home?
-- Integration with Etcd to allow for HA deployment and locking when carrying out jobs
-- Consider approaching as an Operator
-- Consider pointing to the official HPA API client struct
-- Consider different concurrency model for increased reliability in various failure cases 
-- More convention around how to handle .kube/conf as file using in-cluster authentication
-- Consider using selectors instead - Kevin
+## Roadmap
 - Support for cron with seconds and without
+- Official Docker images
+- Docs
+- HA: interim strategy involving redundant imperative approach
+- HA: Integration with etcd to allow for HA deployment and locking when carrying out jobs
+- Investigate approaching as an Operator
+- Investigate pointing to the official HPA API client struct
+- Investigate different concurrency model for increased reliability in various failure cases 
+- More options around how to handle .kube/conf as file using in-cluster authentication
+- Investigate using selectors instead - Kevin

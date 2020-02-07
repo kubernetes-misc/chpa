@@ -9,7 +9,7 @@ import (
 var ReconHub = NewReconHub()
 
 func NewReconHub() *reconHub {
-	r := &reconHub{in: make(chan model.CronScaleV1, 256)}
+	r := &reconHub{in: make(chan model.CronHPAV1, 256)}
 	go func() {
 		for cs := range r.in {
 			logrus.Debugln("recon hub has received", cs.GetID(), "event")
@@ -20,21 +20,21 @@ func NewReconHub() *reconHub {
 }
 
 type reconHub struct {
-	in chan model.CronScaleV1
+	in chan model.CronHPAV1
 }
 
-func (r *reconHub) Add(cs model.CronScaleV1) {
+func (r *reconHub) Add(cs model.CronHPAV1) {
 	r.in <- cs
 }
 
-func checkAndUpdate(cs model.CronScaleV1) {
+func checkAndUpdate(cs model.CronHPAV1) {
 
 	checkAndUpdateDeployment(cs)
 	checkAndUpdateHPA(cs)
 
 }
 
-func checkAndUpdateHPA(cs model.CronScaleV1) {
+func checkAndUpdateHPA(cs model.CronHPAV1) {
 	//Check the hpa
 	hpa, err := client.GetHPA(cs.Metadata.Namespace, cs.Spec.HorizontalPodAutoScaler.Name)
 	if err != nil {
@@ -48,7 +48,7 @@ func checkAndUpdateHPA(cs model.CronScaleV1) {
 
 }
 
-func checkAndUpdateDeployment(cs model.CronScaleV1) {
+func checkAndUpdateDeployment(cs model.CronHPAV1) {
 	//Check the deployment
 	dep, err := client.GetDeployment(cs.Metadata.Namespace, cs.Spec.ScaleTargetRef.Name)
 	if err != nil {

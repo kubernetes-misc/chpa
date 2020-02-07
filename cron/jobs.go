@@ -13,7 +13,7 @@ var Jobs = make(map[string]*Job)
 
 type Job struct {
 	sync.Mutex
-	CronScale model.CronScaleV1
+	CronScale model.CronHPAV1
 	Cron      *cron.Cron
 }
 
@@ -21,13 +21,13 @@ func (j Job) Run() {
 	controller.ReconHub.Add(j.CronScale)
 }
 
-func (j *Job) UpdateCronScale(cs model.CronScaleV1) {
+func (j *Job) UpdateCronScale(cs model.CronHPAV1) {
 	j.Lock()
 	j.CronScale = cs
 	j.Unlock()
 }
 
-func MatchJobs(all []model.CronScaleV1) {
+func MatchJobs(all []model.CronHPAV1) {
 	logrus.Debugln(fmt.Sprintf("> Matching %v jobs", len(all)))
 	//Find invalid jobs
 	toRemove := make([]string, 0)
@@ -74,7 +74,7 @@ func MatchJobs(all []model.CronScaleV1) {
 
 }
 
-func IDExists(id string, list []model.CronScaleV1) (ok bool, cs model.CronScaleV1) {
+func IDExists(id string, list []model.CronHPAV1) (ok bool, cs model.CronHPAV1) {
 	for _, cs = range list {
 		if cs.GetID() == id {
 			ok = true

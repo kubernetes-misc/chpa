@@ -5,24 +5,24 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-var CronScaleV1CRDSchema = schema.GroupVersionResource{
-	Group:    "captainjustin.space",
+var CronHPAV1CRDSchema = schema.GroupVersionResource{
+	Group:    "kubernetes-misc.xyz",
 	Version:  "v1",
-	Resource: "cronscales",
+	Resource: "cronhpas",
 }
 
-type CronScaleV1 struct {
+type CronHPAV1 struct {
 	Metadata MetadataV1 `json:"metadata"`
 	Spec     SpecV1     `json:"spec"`
 }
 
-func (cs CronScaleV1) PrettyString() string {
+func (cs CronHPAV1) PrettyString() string {
 	return fmt.Sprintf("%s replicas: %v ==> %v @ CPU load of %v%% (cronscale/%s operating on %s/%s)", pad(cs.Spec.CronSpec, 12), cs.Spec.HorizontalPodAutoScaler.MinReplicas, cs.Spec.HorizontalPodAutoScaler.MaxReplicas, cs.Spec.HorizontalPodAutoScaler.TargetCPUUtilizationPercentage, cs.Metadata.Name, cs.Spec.ScaleTargetRef.Kind, cs.Spec.ScaleTargetRef.Name)
 
 }
 
-func (cs CronScaleV1) GetID() string {
-	return "cronscalev1." + cs.Metadata.Namespace + "." + cs.Metadata.Name
+func (cs CronHPAV1) GetID() string {
+	return "chpaV1." + cs.Metadata.Namespace + "." + cs.Metadata.Name
 }
 
 type MetadataV1 struct {

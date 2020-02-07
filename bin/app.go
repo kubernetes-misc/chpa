@@ -16,8 +16,6 @@ import (
 
 const DefaultCronSpec = "*/5 * * * * *"
 
-//TODO: panic as feedback
-
 func main() {
 	logrus.Println("Starting up...")
 	err := client.BuildClient()
@@ -52,10 +50,10 @@ func updateCronScales() {
 		return
 	}
 
-	allCRDS := make([]model.CronScaleV1, 0)
+	allCRDS := make([]model.CronHPAV1, 0)
 	for _, ns := range nsl {
 		logrus.Debugln(">> Getting CRDs in", ns)
-		crds, err := client.GetAllCRD(ns, model.CronScaleV1CRDSchema)
+		crds, err := client.GetAllCRD(ns, model.CronHPAV1CRDSchema)
 		if err != nil {
 			logrus.Errorln(err)
 			return
