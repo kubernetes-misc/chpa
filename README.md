@@ -1,8 +1,8 @@
 # kubernetes-misc
 
-## Cron-based Horizontal Pod Autoscaler
+## CHPA
 
-Trigger different Horizontal Pod Autoscaling strategies by cron 
+Declarative Cron-based Horizontal Pod Autoscaler for Kubernetes 
 
 ## Roadmap
 
