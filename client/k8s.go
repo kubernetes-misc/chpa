@@ -84,7 +84,6 @@ func GetAllCRD(namespace string, crd schema.GroupVersionResource) (result []mode
 			logrus.Errorln(err)
 		}
 		result[i] = cs
-		//fmt.Println(fmt.Sprintf("%s replicas: %v ==> %v @ CPU load of %v%% (cronscale/%s operating on %s/%s)", pad(cs.Spec.CronSpec, 12), cs.Spec.MinReplicas, cs.Spec.MaxReplicas, cs.Spec.TargetCPUUtilizationPercentage, cs.Metadata.Name, cs.Spec.ScaleTargetRef.Kind, cs.Spec.ScaleTargetRef.Name))
 	}
 	return
 }

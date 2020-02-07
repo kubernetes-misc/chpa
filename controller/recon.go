@@ -41,7 +41,6 @@ func checkAndUpdateHPA(cs model.CronScaleV1) {
 		logrus.Errorln(err)
 		return
 	}
-	//TODO: check if we need to change at all?
 	hpa.Spec.MinReplicas = &cs.Spec.HorizontalPodAutoScaler.MinReplicas
 	hpa.Spec.MaxReplicas = cs.Spec.HorizontalPodAutoScaler.MaxReplicas
 	hpa.Spec.TargetCPUUtilizationPercentage = &cs.Spec.HorizontalPodAutoScaler.TargetCPUUtilizationPercentage
@@ -56,7 +55,6 @@ func checkAndUpdateDeployment(cs model.CronScaleV1) {
 		logrus.Errorln(err)
 		return
 	}
-	//TODO: check if we need to change at all?
 	dep.Spec.Replicas = &cs.Spec.HorizontalPodAutoScaler.MinReplicas
 	client.UpdateDeployment(dep)
 

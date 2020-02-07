@@ -32,12 +32,13 @@ func MatchJobs(all []model.CronScaleV1) {
 	//Find invalid jobs
 	toRemove := make([]string, 0)
 	for csID, _ := range Jobs {
-		if IDExists(csID, all) {
-			logrus.Debugln("... no problem with", csID)
+		if exists, cs := IDExists(csID, all); !exists || cs.Spec.CronSpec != Jobs[csID].CronScale.Spec.CronSpec {
+			logrus.Infoln("... should remove", csID, "for update:", exists)
+			toRemove = append(toRemove, csID)
 			continue
 		}
-		logrus.Debugln("... should remove", csID)
-		toRemove = append(toRemove, csID)
+		logrus.Debugln("... no problem with", csID)
+		continue
 	}
 	//Remove invalid jobs
 	for _, tr := range toRemove {
@@ -52,10 +53,9 @@ func MatchJobs(all []model.CronScaleV1) {
 		if found {
 			logrus.Debugln("...", cs.GetID(), "updating as already exists")
 			foundCS.UpdateCronScale(cs)
-			//TODO: update the cronSpec in the cron c
 			continue
 		}
-		logrus.Debugln("...", cs.GetID(), "should be created")
+		logrus.Infoln("...", cs.GetID(), "should be created")
 		c := cron.New()
 		j := &Job{
 			CronScale: cs,
@@ -74,11 +74,12 @@ func MatchJobs(all []model.CronScaleV1) {
 
 }
 
-func IDExists(id string, list []model.CronScaleV1) bool {
-	for _, l := range list {
-		if l.GetID() == id {
-			return true
+func IDExists(id string, list []model.CronScaleV1) (ok bool, cs model.CronScaleV1) {
+	for _, cs = range list {
+		if cs.GetID() == id {
+			ok = true
+			return
 		}
 	}
-	return false
+	return
 }
